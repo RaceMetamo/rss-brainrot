@@ -1,3 +1,14 @@
+// Word pools for sentence generation
+const subjects = ['Thrilled to announce ', 'Humble and proud ', 'Grateful to be ', 'Empowering', 'Optimised'];
+const verbs = ['leadership', ' journey', 'disrupting', 'grinding', 'priviledge'];
+const objects = ['KPI', 'growth strategy', 'alignment', 'scalable', 'paradigm shift'];
+
+function generateRandomSentence() {
+    const s = subjects[Math.floor(Math.random() * subjects.length)];
+    const v = verbs[Math.floor(Math.random() * verbs.length)];
+    const o = objects[Math.floor(Math.random() * objects.length)];
+    return `${s} ${v} ${o}.`;
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -23,6 +34,23 @@ app.get('/rss', (req, res) => {
     res.set('Content-Type', 'application/rss+xml');
     res.send(generateRSS(messages));
 });
+
+app.get('/random-rss', (req, res) => {
+        const sentence = generateRandomSentence();
+        const now = new Date().toISOString();
+
+        const randomFeed = `<?xml version="1.0"?>
+<rss version="2.0">
+<channel>
+  <title>Random Sentence Generator</title>
+  <link>https://rss-brainrot.onrender.com/random-rss</link>
+  <description>Procedurally generated phrases</description>
+  <item>
+    <title>${escapeXML(sentence)}</title>
+    <pubDate>${now}</pubDate>
+  </item>
+</channel>
+</rss>`;
 
 function generateRSS(items) {
     return `<?xml version="1.0"?>
