@@ -12,8 +12,7 @@ app.use(express.static('public'));
 app.post('/message', (req, res) => {
     const msg = req.body.message?.trim();
     if (msg && msg.length > 0) {
-        messages.unshift({ text: msg, date: new Date().toISOString() });
-        if (messages.length > 50) messages.pop(); // limit feed size
+        messages = [{ text: msg, date: new Date().toISOString() }];
         res.redirect('/thank-you.html');
     } else {
         res.status(400).send('Invalid message');
