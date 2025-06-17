@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Speak Random RSS</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 2rem;
+            background: black;
+            color: #0f0;
+        }
+
+        #phrase {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗣️ Robot Voice Generator</h1>
+    <button onclick="fetchAndSpeak()">Speak Random Phrase</button>
+    <div id="phrase"></div>
+
+    <script>
+    async function fetchAndSpeak() {
+      try {
+        const res = await fetch('/random-rss');
+        const xml = await res.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, 'application/xml');
+        const title = xmlDoc.querySelector('item > title')?.textContent || 'No phrase found';
+
+        // Display
+        document.getElementById('phrase').textContent = title;
+
+        // Speak it
+        const utterance = new SpeechSynthesisUtterance(title);
+        utterance.lang = 'en-US';
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Google') || voice.default) || null;
+
+        speechSynthesis.speak(utterance);
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+    </script>
+</body>
+</html>
