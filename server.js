@@ -29,7 +29,7 @@ function generateRSS(items) {
 <rss version="2.0">
 <channel>
   <title>Live Gallery Feed</title>
-  <link>https://your-render-url.onrender.com</link>
+  <link>https://rss-brainrot.onrender.com/</link>
   <description>User-submitted messages</description>
   ${items.map(item => `
   <item>
