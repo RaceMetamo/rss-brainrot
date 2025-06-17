@@ -5,48 +5,58 @@
     <title>Speak Random RSS</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: monospace;
             text-align: center;
             padding: 2rem;
             background: black;
-            color: #0f0;
+            color: #00ff99;
         }
 
         #phrase {
             margin-top: 2rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
-    <h1>🗣️ Robot Voice Generator</h1>
-    <button onclick="fetchAndSpeak()">Speak Random Phrase</button>
-    <div id="phrase"></div>
+    <h1>🧠 Robot Voice Feed</h1>
+    <div id="phrase">Loading...</div>
 
     <script>
-    async function fetchAndSpeak() {
-      try {
-        const res = await fetch('/random-rss');
-        const xml = await res.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xml, 'application/xml');
-        const title = xmlDoc.querySelector('item > title')?.textContent || 'No phrase found';
+        function speak(text) {
+            speechSynthesis.cancel(); // Stop previous speech if still running
 
-        // Display
-        document.getElementById('phrase').textContent = title;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.default);
 
-        // Speak it
-        const utterance = new SpeechSynthesisUtterance(title);
-        utterance.lang = 'en-US';
-        utterance.rate = 1;
-        utterance.pitch = 1;
-        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Google') || voice.default) || null;
+            speechSynthesis.speak(utterance);
+        }
 
-        speechSynthesis.speak(utterance);
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    }
+        async function fetchAndSpeak() {
+            try {
+                const res = await fetch('/random-rss');
+                const xml = await res.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xml, 'application/xml');
+                const title = xmlDoc.querySelector('item > title')?.textContent || 'No phrase found';
+
+                document.getElementById('phrase').textContent = title;
+                speak(title);
+            } catch (err) {
+                console.error('Fetch error:', err);
+                document.getElementById('phrase').textContent = 'Error fetching RSS';
+            }
+        }
+
+        // Initial load
+        fetchAndSpeak();
+
+        // Auto refresh every 5 seconds
+        setInterval(fetchAndSpeak, 5000);
     </script>
 </body>
 </html>
