@@ -11,25 +11,25 @@ app.use(express.static('public'));
 
 // --- Word pools for random RSS ---
 const subjects = [
-    'The algorithm',
-    'A street poet',
-    'This exhibit',
-    'Your mind',
-    'A ghost in the machine'
+    'Paradigm',
+    'intersectional',
+    'progress',
+    'humble',
+    'Achievement'
 ];
 const verbs = [
-    'dreams of',
-    'transforms into',
-    'echoes',
-    'corrupts',
-    'resurrects'
+    'iterate',
+    'transform',
+    'align',
+    'synergize',
+    'craft'
 ];
 const objects = [
-    'electric futures',
-    'glitchy memories',
-    'neon prophets',
-    'cyberspace',
-    'sentient code'
+    'humble',
+    'proud',
+    'empathize',
+    'collaboration',
+    'kpi'
 ];
 
 function generateRandomSentence() {
