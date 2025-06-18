@@ -11,11 +11,11 @@ app.use(express.static('public'));
 
 // --- Word pools for random RSS ---
 const subjects = [
-    'Paradigm',
-    'intersectional',
-    'progress',
-    'humble',
-    'Achievement'
+    'Thrilled to announce ',
+    'Humble and proud',
+    'This journey has ',
+    'Empowering teams ',
+    'Rooted in purpose '
 ];
 const verbs = [
     'iterate',
@@ -25,11 +25,11 @@ const verbs = [
     'craft'
 ];
 const objects = [
-    'humble',
-    'proud',
-    'empathize',
-    'collaboration',
-    'kpi'
+    'conscious pipeline ',
+    'while executing ',
+    'product is presence',
+    'our growth strategy ',
+    'building community'
 ];
 
 function generateRandomSentence() {
