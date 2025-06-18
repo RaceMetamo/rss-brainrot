@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const app = express();
@@ -43,9 +43,12 @@ app.post('/message', (req, res) => {
     const msg = req.body.message?.trim();
     if (msg && msg.length > 0) {
         messages.unshift({ text: msg, date: new Date().toISOString() });
-        if (messages.length > 20) {
-            messages = messages.slice(0, 20);
+
+        // ✅ Trim to top 5 only
+        if (messages.length > 5) {
+            messages = messages.slice(0, 5); // Keep only latest 5
         }
+
         res.redirect('/thank-you.html');
     } else {
         res.status(400).send('Invalid message');
