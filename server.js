@@ -81,17 +81,19 @@ app.get('/random-rss', (req, res) => {
 });
 
 function generateRSS(items) {
+    const combinedText = items.map(item => item.text).join('\n');
+    const latestDate = items[0]?.date || new Date().toISOString();
+
     return `<?xml version="1.0"?>
 <rss version="2.0">
 <channel>
   <title>Live Gallery Feed</title>
   <link>https://rss-brainrot.onrender.com/</link>
   <description>User-submitted messages</description>
-  ${items.map(item => `
   <item>
-    <title>${escapeXML(item.text)}</title>
-    <pubDate>${item.date}</pubDate>
-  </item>`).join('')}
+    <title>${escapeXML(combinedText)}</title>
+    <pubDate>${latestDate}</pubDate>
+  </item>
 </channel>
 </rss>`;
 }
