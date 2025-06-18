@@ -42,12 +42,16 @@ function generateRandomSentence() {
 app.post('/message', (req, res) => {
     const msg = req.body.message?.trim();
     if (msg && msg.length > 0) {
-        messages = [{ text: msg, date: new Date().toISOString() }];
+        messages.unshift({ text: msg, date: new Date().toISOString() });
+        if (messages.length > 20) {
+            messages = messages.slice(0, 20);
+        }
         res.redirect('/thank-you.html');
     } else {
         res.status(400).send('Invalid message');
     }
 });
+
 
 app.get('/rss', (req, res) => {
     res.set('Content-Type', 'application/rss+xml');
