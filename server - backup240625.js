@@ -39,27 +39,29 @@ function generateRandomSentence() {
     return `${s} ${v} ${o}.`;
 }
 
-// ✅ User message submission — stack & trim to top 5
 app.post('/message', (req, res) => {
     const msg = req.body.message?.trim();
     if (msg && msg.length > 0) {
         messages.unshift({ text: msg, date: new Date().toISOString() });
+
+        // ✅ Trim to top 5 only
         if (messages.length > 5) {
-            messages = messages.slice(0, 5);
+            messages = messages.slice(0, 5); // Keep only latest 5
         }
+
         res.redirect('/thank-you.html');
     } else {
         res.status(400).send('Invalid message');
     }
 });
 
-// ✅ RSS with stacked user-submitted messages
+
 app.get('/rss', (req, res) => {
     res.set('Content-Type', 'application/rss+xml');
     res.send(generateRSS(messages));
 });
 
-// ✅ Random sentence feed
+// --- New Route: /random-rss ---
 app.get('/random-rss', (req, res) => {
     const sentence = generateRandomSentence();
     const now = new Date().toISOString();
@@ -81,12 +83,6 @@ app.get('/random-rss', (req, res) => {
     res.send(randomFeed);
 });
 
-// ✅ Ping endpoint to prevent Render from sleeping
-app.get('/ping', (req, res) => {
-    res.send('pong');
-});
-
-// --- RSS Generator for user messages (single item, stacked lines)
 function generateRSS(items) {
     const combinedText = items.map(item => item.text).join('\n');
     const latestDate = items[0]?.date || new Date().toISOString();
@@ -96,7 +92,7 @@ function generateRSS(items) {
 <channel>
   <title>Live Gallery Feed</title>
   <link>https://rss-brainrot.onrender.com/</link>
-  <description>Stacked messages</description>
+  <description>User-submitted messages</description>
   <item>
     <title>${escapeXML(combinedText)}</title>
     <pubDate>${latestDate}</pubDate>
@@ -105,7 +101,6 @@ function generateRSS(items) {
 </rss>`;
 }
 
-// --- Escape XML for RSS
 function escapeXML(str) {
     return str.replace(/[<>&'"]/g, c => ({
         '<': '&lt;', '>': '&gt;', '&': '&amp;',
